@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mobile-application-design-and-development.iml" filepath="$PROJECT_DIR$/mobile-application-design-and-development.iml" />
-      <module fileurl="file://$PROJECT_DIR$/week1/week1.iml" filepath="$PROJECT_DIR$/week1/week1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/week2/week2.iml" filepath="$PROJECT_DIR$/week2/week2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mobile-application-design-and-development.iml" filepath="$PROJECT_DIR$/.idea/mobile-application-design-and-development.iml" />
     </modules>
   </component>
 </project>
