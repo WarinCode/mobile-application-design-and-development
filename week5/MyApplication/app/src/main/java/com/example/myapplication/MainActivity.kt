@@ -8,11 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.DataObject
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mail
@@ -20,6 +24,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -70,13 +75,15 @@ fun MyApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val sharedViewModel: SharedViewModel = viewModel()
     var selectedItem by remember { mutableStateOf(0) }
-    val items = listOf("Home", "Search", "Notifications", "Mail", "Setting")
+    val items = listOf("home", "search", "showdata", "profile", "signup")
     val icons = listOf(
         Icons.Default.Home,
         Icons.Default.Search,
-        Icons.Default.Notifications,
-        Icons.Default.Mail,
-        Icons.Default.Settings)
+        Icons.Default.DataObject,
+        Icons.Default.VerifiedUser,
+        Icons.Default.Email
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,18 +110,22 @@ fun MyApp(modifier: Modifier = Modifier) {
                 contentColor = Color.White
             ) {
                 items.forEachIndexed { index, item ->
+                    println(item)
+                    println(navController.currentDestination?.route)
                     NavigationBarItem(
                         icon = { Icon(icons[index], contentDescription = item) },
 //                        label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = { selectedItem = index
-                                   when(index)
-                                   {
-                                       0-> navController.navigate("home")
-                                       1-> navController.navigate("search")
-                                       2-> navController.navigate("mail")
-                                       else -> navController.navigate("signUp")
-                                   }},
+                            when(index)
+                            {
+                                0-> navController.navigate("home")
+                                1-> navController.navigate("search/")
+                                2-> navController.navigate("showdata")
+                                3-> navController.navigate("profile")
+                                4-> navController.navigate("signup")
+                                else -> navController.navigate("signup")
+                            }},
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             unselectedIconColor = Color.Gray,
@@ -125,30 +136,31 @@ fun MyApp(modifier: Modifier = Modifier) {
             }
         },
         modifier = Modifier.fillMaxSize()) { innerppadding ->
-            NavHost(
-                navController = navController,
-                startDestination = "home"
-            ){
-               composable(route ="home"){HomeScreen(ToSenData = {
-                   text -> navController.navigate("search/$text")
-               })}
-               composable(route ="search/{text}")
-               {
-                   backEntry -> val data = backEntry.arguments?.getString("text")?: "Notdata"
-                   SearchScreen(
-                       dataReceive = data,navController
-                   ) }
+        NavHost(
+            navController = navController,
+            startDestination = "home"
+        ){
+            composable(route ="home"){ HomeScreen(ToSenData = {
+                    text -> navController.navigate("search/$text")
+            })}
+            composable(route ="search/{text}")
+            {
+                    backEntry -> val data = backEntry.arguments?.getString("text")?: "Notdata"
+                SearchScreen(
+                    dataReceive = data,
+                    navController = navController
+                ) }
 
-               composable(route ="showdata"){ShowDataScreen()}
-                composable (route="signUp"){SignUpScreen (
-                    onSignUp = {user->
-                        sharedViewModel.setUser((user))
-                        navController.navigate(route = "profile_screen")
-                    }
-                )
+            composable(route ="showdata"){ ShowDataScreen()}
+            composable (route="signup"){ SignUpScreen (
+                onSignUp = {user->
+                    sharedViewModel.setUser((user))
+                    navController.navigate(route = "profile")
                 }
-                composable (route = "profile_screen"){ProfileScreen(sharedViewModel)}
+            )
             }
+            composable (route = "profile"){ ProfileScreen(sharedViewModel) }
+        }
     }
 }
 
@@ -166,7 +178,7 @@ fun HomeScreen(ToSenData:(String)-> Unit, modifier: Modifier = Modifier) {
             label = { Text("กรุณากรอกข้อมูล") },
             modifier = modifier.fillMaxWidth()
         )
-//        Spacer(Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Button (onClick = { ToSenData(textInput.text)}) {
             Text("ส่งข้อมูล")
         }
@@ -205,5 +217,4 @@ fun GreetingPreview() {
         MyApp()
     }
 }
-
 
