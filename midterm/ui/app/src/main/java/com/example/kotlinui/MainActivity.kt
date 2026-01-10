@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.kotlinui.screen.ExampleScreen
 import com.example.kotlinui.screen.ExampleScreen2
+import com.example.kotlinui.screen.SimapleLayoutScreen
 import com.example.kotlinui.ui.theme.KotlinUITheme
 
 class MainActivity : ComponentActivity() {
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
                         when(selectScreen) {
                             1 -> ExampleScreen(modifier = Modifier.fillMaxSize())
                             2 -> ExampleScreen2(modifier = Modifier.fillMaxSize())
+                            3 -> SimapleLayoutScreen(modifier = Modifier.fillMaxSize())
                             else -> {
                                 Column(
                                     modifier = Modifier.fillMaxSize(),
