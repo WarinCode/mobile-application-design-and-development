@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -83,6 +84,11 @@ fun MyApp(modifier: Modifier = Modifier) {
         Icons.Default.VerifiedUser,
         Icons.Default.Email
     )
+    var currentDestination by remember { mutableStateOf<String?>("home") }
+
+    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        currentDestination = destination.route
+    }
 
     Scaffold(
         topBar = {
@@ -110,12 +116,10 @@ fun MyApp(modifier: Modifier = Modifier) {
                 contentColor = Color.White
             ) {
                 items.forEachIndexed { index, item ->
-                    println(item)
-                    println(navController.currentDestination?.route)
                     NavigationBarItem(
                         icon = { Icon(icons[index], contentDescription = item) },
 //                        label = { Text(item) },
-                        selected = selectedItem == index,
+                        selected = currentDestination == item || currentDestination!!.contains(item),
                         onClick = { selectedItem = index
                             when(index)
                             {
@@ -129,7 +133,7 @@ fun MyApp(modifier: Modifier = Modifier) {
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.White,
                             unselectedIconColor = Color.Gray,
-                            indicatorColor = Color(0xFF6A45B1)
+                            indicatorColor = Color(0xFF6A45B1),
                         )
                     )
                 }
