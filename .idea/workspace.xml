@@ -5,14 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7dc79b0b-9233-448b-8a86-2cc15319eb95" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/mobile-application-design-and-development.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/AndroidProjectSystem.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/migrations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/midterm/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +36,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/WarinCode/mobile-application-design-and-development.git&quot;,
-    &quot;accountId&quot;: &quot;7eee0781-6ce1-49be-81ff-a9977ec8c42e&quot;
+    &quot;accountId&quot;: &quot;869034a6-eb25-473e-818e-d1a14ef1ad7e&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -55,10 +57,21 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/Student/Documents/mobile-application-design-and-development"
+    "last_opened_file_path": "/Users/Student/Documents/mobile-application-design-and-development",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28539.13" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28539.13" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="7dc79b0b-9233-448b-8a86-2cc15319eb95" name="Changes" comment="" />
@@ -66,8 +79,13 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1766540447007</updated>
+      <workItem from="1767714260364" duration="156000" />
+      <workItem from="1767714464580" duration="39000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
