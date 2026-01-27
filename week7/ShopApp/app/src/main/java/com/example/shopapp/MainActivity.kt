@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.History
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -64,22 +67,24 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 
-data class ProductModel (
-    val detail: String,
-    val quantity: Int,
+data class DrinkModel (
     val size: String,
-)
+    val quantity: Int,
+    val note: String?,
+    )
 
 class SharedViewModel: ViewModel(){
-    private val _product = mutableStateOf<ProductModel?>(null)
-    val product: State<ProductModel?> = _product
+    private val _drink = mutableStateOf<DrinkModel?>(null)
+    val product: State<DrinkModel?> = _drink
 
-    fun setProduct(newProduct: ProductModel){
-        _product.value = newProduct
+    fun setDrink(newDrink: DrinkModel){
+        _drink.value = newDrink
     }
 }
 
@@ -89,20 +94,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            val sharedViewModel: SharedViewModel = viewModel()
-
             ShopAppTheme {
+                val navController = rememberNavController()
+                val sharedViewModel: SharedViewModel = viewModel()
+                val context = LocalContext.current
+                val viewModel: OrderViewModel = viewModel(
+                    factory = OrderViewModelFactory(context)
+                )
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(0xFF571C1C),
+                                containerColor = Color(0xFF3F51B5),
                                 titleContentColor = Color.White
                             ),
                             title = { Text("Shop App") },
                             actions = {
-                                IconButton(onClick = {}) {
+                                IconButton(onClick = {},
+                                    colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
+                                ) {
                                     Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = null)
                                 }
                             }
@@ -110,7 +121,7 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         NavigationBar(
-                            containerColor = Color(0xFF571C1C),
+                            containerColor = Color(0xFF3F51B5),
                             contentColor = Color.White,
                             ) {
                             NavigationBarItem(
@@ -120,13 +131,13 @@ class MainActivity : ComponentActivity() {
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = Color.White,
                                     unselectedIconColor = Color.White,
-                                    indicatorColor = Color(0xFFCC9486),
+                                    indicatorColor = Color(0xFF5E76C5),
                                 )
                             )
                             NavigationBarItem(
                                 icon = { Icon(Icons.Default.History, contentDescription = null) },
                                 selected = false,
-                                onClick = { navController.navigate("orderDetails") },
+                                onClick = { navController.navigate("history") },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = Color.White,
                                     unselectedIconColor = Color.White,
@@ -141,19 +152,23 @@ class MainActivity : ComponentActivity() {
                         startDestination = "home"
                     ){
                         composable(route = "home") {
-                            Shop(navController = navController,
-                                onSubmit = { product ->
-                                    sharedViewModel.setProduct(product)
-                                    navController.navigate("orderDetails")
+                            HomeScreen(navController = navController,
+                                onSubmit = { drink ->
+                                    sharedViewModel.setDrink(drink)
+                                    navController.navigate("confirm")
                             },
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(route = "orderDetails"){
-                            OrderDetails(sharedViewModel = sharedViewModel,
+                        composable(route = "confirm"){
+                            ConfirmScreen(sharedViewModel = sharedViewModel,
                                 navController = navController,
+                                viewModel = viewModel,
                                 modifier = Modifier.padding(innerPadding)
                             )
+                        }
+                        composable(route = "history"){
+                            HistoryScreeen(viewModel = viewModel)
                         }
                     }
                 }
@@ -163,9 +178,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Shop(navController: NavController, onSubmit: (ProductModel) -> Unit, modifier: Modifier = Modifier){
+fun HomeScreen(navController: NavController, onSubmit: (DrinkModel) -> Unit, modifier: Modifier = Modifier){
     val sizes = listOf("S", "M", "L")
-    var detail by remember { mutableStateOf("") }
+    var note by remember { mutableStateOf("") }
     var selectedSize by remember { mutableStateOf(sizes[0]) }
     var quantity by remember { mutableStateOf(1) }
 
@@ -212,8 +227,8 @@ fun Shop(navController: NavController, onSubmit: (ProductModel) -> Unit, modifie
 
         Text("รายละเอียดเพิ่มเติม: ")
         OutlinedTextField(
-            value = detail,
-            onValueChange = { new -> detail = new },
+            value = note,
+            onValueChange = { new -> note = new },
             label = { Text("เช่น หวานน้อย, เพิ่มช็อต") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -243,11 +258,11 @@ fun Shop(navController: NavController, onSubmit: (ProductModel) -> Unit, modifie
         Spacer(Modifier.height(20.dp))
         Button(
             onClick = {
-                onSubmit(ProductModel(detail = detail, quantity = quantity, size = selectedSize))
-                navController.navigate("orderDetails")
+                onSubmit(DrinkModel(note = note, quantity = quantity, size = selectedSize))
+                navController.navigate("confirm")
             },
             modifier = Modifier.fillMaxWidth().height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0BDAC3)
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4)
         )){
             Text("ใส่ตะกร้า")
         }
@@ -255,8 +270,8 @@ fun Shop(navController: NavController, onSubmit: (ProductModel) -> Unit, modifie
 }
 
 @Composable
-fun OrderDetails(sharedViewModel: SharedViewModel, navController: NavController, modifier: Modifier = Modifier){
-    val product by sharedViewModel.product
+fun ConfirmScreen(sharedViewModel: SharedViewModel, navController: NavController, viewModel: OrderViewModel,  modifier: Modifier = Modifier){
+    val drink by sharedViewModel.product
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -269,20 +284,43 @@ fun OrderDetails(sharedViewModel: SharedViewModel, navController: NavController,
             modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
         )
         Text("รายการที่สั่ง", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Text("ขนาด: ${product!!.size}")
-        Text("จำนวน: ${product!!.quantity}")
-        Text("รายละเอียดเพิ่มเติม: ${product!!.detail}")
+        Text("ขนาด: ${drink!!.size}")
+        Text("จำนวน: ${drink!!.quantity}")
+        Text("รายละเอียดเพิ่มเติม: ${drink!!.note}")
         Spacer(Modifier.height(20.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ){
-            Button(onClick = { navController.navigate("home") }){
+            Button(onClick = {
+                navController.navigate("home")
+                viewModel.insertOrder(
+                    size = drink!!.size,
+                    qty = drink!!.quantity,
+                    note = drink!!.note
+                )
+            }){
                 Text("สั่งเลย")
             }
             Button(onClick = { navController.navigate("home") }){
                 Text("ยกเลิก")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HistoryScreeen(viewModel: OrderViewModel, modifier: Modifier = Modifier){
+    val order by viewModel.orders.collectAsState(initial = emptyList())
+    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        items(order) { orders ->
+            Row() {
+                Text("Size: ${orders.size}, " +
+                        "Qty: ${orders.qty}, " +
+                        "Note: ${orders.note}",
+                    modifier = Modifier.padding(vertical = 2.dp))
             }
         }
     }

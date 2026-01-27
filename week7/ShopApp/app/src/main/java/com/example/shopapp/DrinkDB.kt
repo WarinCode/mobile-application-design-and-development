@@ -30,6 +30,9 @@ data class OrderEntity (
 interface  OrderDao {
     @Insert
     suspend fun insert(order: OrderEntity)
+
+    @Query("SELECT * FROM orders")
+    fun getAll(): Flow<List<OrderEntity>>
 }
 
 @Database(
@@ -59,11 +62,14 @@ class OrderRepository(private  val dao: OrderDao){
     suspend fun insert(order: OrderEntity){
         dao.insert(order)
     }
+
+    val orders = dao.getAll()
 }
 
 class OrderViewModel(
     private val repository: OrderRepository
 ): ViewModel() {
+    val orders = repository.orders
     fun insertOrder(size: String, qty: Int, note: String?){
         viewModelScope.launch {
             repository.insert(
