@@ -114,7 +114,10 @@ class MainActivity : ComponentActivity() {
                                 IconButton(onClick = {},
                                     colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
                                 ) {
-                                    Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = null)
+                                    Icon(
+                                        imageVector = Icons.Filled.ShoppingCart,
+                                        contentDescription = null
+                                    )
                                 }
                             }
                         )
@@ -161,14 +164,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(route = "confirm"){
-                            ConfirmScreen(sharedViewModel = sharedViewModel,
+                            ConfirmScreen(
+                                sharedViewModel = sharedViewModel,
                                 navController = navController,
                                 viewModel = viewModel,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
                         composable(route = "history"){
-                            HistoryScreeen(viewModel = viewModel)
+                            HistoryScreeen(viewModel = viewModel, modifier = Modifier)
                         }
                     }
                 }
@@ -244,14 +248,20 @@ fun HomeScreen(navController: NavController, onSubmit: (DrinkModel) -> Unit, mod
                     quantity -= 1
                 }
             }) {
-                Icon(imageVector = Icons.Default.RemoveCircleOutline, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Default.RemoveCircleOutline,
+                    contentDescription = null
+                )
             }
             Text("$quantity", fontSize = 18.sp)
 
             IconButton(onClick = {
                 quantity += 1
             }) {
-                Icon(imageVector = Icons.Default.AddCircleOutline, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Default.AddCircleOutline,
+                    contentDescription = null
+                )
             }
         }
 
@@ -261,7 +271,9 @@ fun HomeScreen(navController: NavController, onSubmit: (DrinkModel) -> Unit, mod
                 onSubmit(DrinkModel(note = note, quantity = quantity, size = selectedSize))
                 navController.navigate("confirm")
             },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4)
         )){
             Text("ใส่ตะกร้า")
@@ -314,14 +326,22 @@ fun ConfirmScreen(sharedViewModel: SharedViewModel, navController: NavController
 @Composable
 fun HistoryScreeen(viewModel: OrderViewModel, modifier: Modifier = Modifier){
     val order by viewModel.orders.collectAsState(initial = emptyList())
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        items(order) { orders ->
-            Row() {
-                Text("Size: ${orders.size}, " +
-                        "Qty: ${orders.qty}, " +
-                        "Note: ${orders.note}",
-                    modifier = Modifier.padding(vertical = 2.dp))
-            }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(order) {
+            orders ->
+                Row() {
+                    Text("Size: ${orders.size}, " +
+                            "Qty: ${orders.qty}, " +
+                            "Note: ${orders.note}",
+                        modifier = Modifier
+                            .padding(vertical = 2.dp)
+                    )
+                }
         }
     }
 }
