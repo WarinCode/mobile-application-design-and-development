@@ -74,8 +74,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.savedstate.SavedState
 import com.example.shopapp.UpdateScreen
 
 data class DrinkModel (
@@ -108,6 +110,13 @@ class MainActivity : ComponentActivity() {
                 )
                 var selectedPage by remember { mutableStateOf("") }
 
+                navController.addOnDestinationChangedListener { controller, destination, arguments ->
+                    selectedPage = destination.route ?: "home"
+                }
+                navController.removeOnDestinationChangedListener { controller, destination, arguments ->
+                    selectedPage = destination.route ?: "home"
+                }
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -135,7 +144,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                             NavigationBarItem(
                                 icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                                selected = true,
+                                selected = selectedPage == "home",
                                 onClick = { navController.navigate("home") },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = Color.White,
@@ -145,11 +154,12 @@ class MainActivity : ComponentActivity() {
                             )
                             NavigationBarItem(
                                 icon = { Icon(Icons.Default.History, contentDescription = null) },
-                                selected = false,
+                                selected = selectedPage == "history",
                                 onClick = { navController.navigate("history") },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = Color.White,
                                     unselectedIconColor = Color.White,
+                                    indicatorColor = Color(0xFF5E76C5),
                                 )
                             )
                         }
