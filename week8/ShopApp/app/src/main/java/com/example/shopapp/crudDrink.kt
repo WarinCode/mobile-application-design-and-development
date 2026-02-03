@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 fun UpdateScreen(
     orderID: Int,
     viewModel: OrderViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier
 ){
 
@@ -137,14 +138,22 @@ fun UpdateScreen(
         Spacer(Modifier.height(20.dp))
         Button(
             onClick = {
-                viewModel.updateOrder(id = orderID, note = note, size = selectedOption, qty = numberOrder)
+                orders?.let {
+                    viewModel.updateOrder(
+                        id = orderID,
+                        size = selectedOption,
+                        qty = numberOrder,
+                        note = note,
+                    )
+                }
+                navController.navigate("history")
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4)
             )){
-            Text("แก้ไข")
+            Text("แก้ไขข้อมูล")
         }
     }
 }

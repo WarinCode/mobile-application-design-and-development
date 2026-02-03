@@ -195,7 +195,7 @@ class MainActivity : ComponentActivity() {
                                 type = NavType.IntType
                             })){ backStackEntry ->
                             val id = backStackEntry.arguments?.getInt("id") ?: 0
-                            UpdateScreen(orderID = id, viewModel = viewModel, modifier = Modifier)
+                            UpdateScreen(orderID = id, viewModel = viewModel, navController = navController, modifier = Modifier)
                         }
                     }
                 }
