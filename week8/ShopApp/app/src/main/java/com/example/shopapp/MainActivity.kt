@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.sharp.Clear
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -60,6 +61,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -350,6 +352,8 @@ fun ConfirmScreen(sharedViewModel: SharedViewModel, navController: NavController
 fun HistoryScreeen(viewModel: OrderViewModel, navController: NavController, modifier: Modifier = Modifier){
     val order by viewModel.orders.collectAsState(initial = emptyList())
 
+    var confirmDialog by remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -376,8 +380,26 @@ fun HistoryScreeen(viewModel: OrderViewModel, navController: NavController, modi
                             contentDescription = null
                         )
                     }
+
+                    if (confirmDialog) {
+                        AlertDialog(
+                            onDismissRequest = { confirmDialog = false },
+                            title = { Text("ยืนยันการลบ") },
+                            text = { Text("แน่ใจว่าต้องการลบรายการน ${orders.id}") },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    confirmDialog = false
+                                    viewModel.deleteOrder(id = orders.id, size = orders.size, qty = orders.qty, note = orders.note)
+                                }) { Text("ลบ") }
+                                            },
+                            dismissButton = {
+                                TextButton(onClick = { confirmDialog = false } ) { Text("ยกเลิก") }
+                            }
+                        )
+                    }
+
                     IconButton(onClick = {
-                        viewModel.deleteOrder(id = orders.id, size = orders.size, qty = orders.qty, note = orders.note)
+                        confirmDialog = true
                     }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
