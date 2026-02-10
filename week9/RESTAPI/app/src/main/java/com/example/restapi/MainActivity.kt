@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         ) {
 //                        ProductScreen(1)
 //                        ProductScreen(2)
-                        AllProducts()
+                        AllProductScreen()
                     }
                 }
             }
@@ -78,7 +78,7 @@ fun ProductScreen(productId: Int, viewModel: ProductViewModel = viewModel(
 }
 
 @Composable
-fun AllProducts(viewModel: ProductViewModel = viewModel(
+fun AllProductScreen(viewModel: ProductViewModel = viewModel(
     factory = ProductViewModelFactory(ProductRepository())
 )) {
     val state = viewModel.allProducts.observeAsState()

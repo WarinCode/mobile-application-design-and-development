@@ -9,7 +9,10 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 data class Rating (
@@ -34,7 +37,16 @@ interface ApiService {
     ): Response<Product>
 
     @GET("products")
-    suspend fun getProducts(): Response<List<Product>>
+    suspend fun getAllProducts(): Response<List<Product>>
+
+    @POST("products")
+    suspend fun addProduct(product: Product): Response<Product>
+
+    @PUT("products/{id}")
+    suspend fun updateProduct(id: Int, product: Product): Response<Product>
+
+    @DELETE("products/{id}")
+    suspend fun deleteProduct(id: Int): Response<Product>
 }
 
 object RetrofitInstance {
@@ -71,7 +83,7 @@ class ProductRepository {
 
     suspend fun fetchProducts(): Resource<List<Product>> {
         return try {
-            val response = RetrofitInstance.api.getProducts()
+            val response = RetrofitInstance.api.getAllProducts()
             if (response.isSuccessful){
                 response.body()?.let {
                     Resource.Success(it)
