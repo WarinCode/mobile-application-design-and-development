@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,31 +37,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RESTAPITheme {
-                val state = rememberScrollState()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(state),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-//                        ProductScreen(1)
-//                        ProductScreen(2)
-                        AllProductScreen()
-                    }
+                    AllProductsScreen()
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -78,17 +60,20 @@ fun ProductScreen(productId: Int, viewModel: ProductViewModel = viewModel(
 }
 
 @Composable
-fun AllProductScreen(viewModel: ProductViewModel = viewModel(
+fun AllProductsScreen(viewModel: ProductViewModel = viewModel(
     factory = ProductViewModelFactory(ProductRepository())
 )) {
     val state = viewModel.allProducts.observeAsState()
-    println(state)
-    LaunchedEffect("") {
-        viewModel.loadProducts()
-    }
+    LaunchedEffect(Unit) { viewModel.loadAllProducts() }
     when(val result = state.value) {
         is Resource.Loading -> { CircularProgressIndicator() }
-        is Resource.Success -> { result.data?.let { it -> it.forEach { it2 -> ProductItem(it2) }}}
+        is Resource.Success -> {
+            LazyColumn{
+                items(result.data ?: emptyList()) {
+                    product -> ProductItem(product)
+                }
+            }
+        }
         is Resource.Error -> { Text(text = result.message ?: "Error") }
         null -> Unit
     }

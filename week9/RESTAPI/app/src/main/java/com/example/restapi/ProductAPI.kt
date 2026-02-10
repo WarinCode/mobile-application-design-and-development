@@ -32,7 +32,7 @@ data class Product (
 
 interface ApiService {
     @GET("products/{id}")
-    suspend fun getProductById(
+    suspend fun getProductByID(
         @Path("id") id: Int
     ): Response<Product>
 
@@ -70,9 +70,9 @@ sealed class Resource<T> (
 }
 
 class ProductRepository {
-    suspend fun fetchProductById(id: Int): Resource<Product> {
+    suspend fun fetchProductByID(id: Int): Resource<Product> {
         return try {
-            val response = RetrofitInstance.api.getProductById(id)
+            val response = RetrofitInstance.api.getProductByID(id)
             if (response.isSuccessful){
                 response.body()?.let {
                     Resource.Success(it)
@@ -81,7 +81,7 @@ class ProductRepository {
         } catch (e: Exception) { Resource.Error(e.message) }
     }
 
-    suspend fun fetchProducts(): Resource<List<Product>> {
+    suspend fun fetchAllProducts(): Resource<List<Product>> {
         return try {
             val response = RetrofitInstance.api.getAllProducts()
             if (response.isSuccessful){
@@ -101,14 +101,14 @@ class ProductViewModel(private val repository: ProductRepository): ViewModel() {
     fun loadProduct(id: Int){
         _product.value = Resource.Loading()
         viewModelScope.launch {
-            _product.value = repository.fetchProductById(id)
+            _product.value = repository.fetchProductByID(id)
         }
     }
 
-    fun loadProducts(){
+    fun loadAllProducts(){
         _allProducts.value = Resource.Loading()
         viewModelScope.launch {
-            _allProducts.value = repository.fetchProducts()
+            _allProducts.value = repository.fetchAllProducts()
         }
     }
 }
