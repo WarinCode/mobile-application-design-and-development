@@ -100,7 +100,7 @@ fun AllTeamsScreen(
                     Text("UEFA Champions League 2025 - 2026 | Teams",
                         modifier = Modifier.fillMaxWidth(),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Center
                     )
                 }
