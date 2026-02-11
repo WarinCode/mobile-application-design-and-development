@@ -72,10 +72,10 @@ fun TeamItem(team: Team){
                 .background(Color.Black)
                 .padding(vertical = 5.dp)
             )
-            Text("id ${team.id}", modifier =
+            Text("id: ${team.id}", modifier =
                 Modifier.padding(top=10.dp)
             )
-            Text("short_name ${team.short_name}")
+            Text("short name: ${team.short_name}")
             Text("abbreviation: ${team.abbreviation}")
             Text("location: ${team.location}")
         }
