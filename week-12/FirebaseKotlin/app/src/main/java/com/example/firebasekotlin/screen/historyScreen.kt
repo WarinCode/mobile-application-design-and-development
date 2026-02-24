@@ -50,11 +50,12 @@ import kotlinx.coroutines.launch
 fun HistoryScreen(
     onEditClick: (String) -> Unit,
     modifier: Modifier = Modifier) {
-    //------------------- dummy ข้อมูล -------------------
+
     val orderVM = viewModel<OrderViewModel>()
     val orders by orderVM.orders.collectAsState(initial = emptyList())
-    var showDeleteDialog by remember { mutableStateOf(false) }
+    var deleteOrder by remember { mutableStateOf<Order?>(null) }
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -84,6 +85,7 @@ fun HistoryScreen(
                             confirmButton = {
                                 TextButton(
                                     onClick = {
+                                        deleteOrder?.let { orderVM.deleteOrder(it.id) }
                                         showDeleteDialog = false
                                     }
                                 ) { Text("ลบ") }
@@ -131,6 +133,7 @@ fun HistoryScreen(
                                 IconButton(
                                     onClick = {
                                         scope.launch { dismissState.reset() }
+                                        deleteOrder = order
                                         showDeleteDialog = true },
                                     modifier = Modifier
                                         .background(

@@ -1,6 +1,7 @@
 package com.example.firebasekotlin.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -21,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,15 +34,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.firebasekotlin.firebase.OrderViewModel
 
 @Composable
 fun EditOrderScreen(orderID: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
 
+    val orderVM = viewModel<OrderViewModel>()
+    val orders by orderVM.orders.collectAsState(initial = emptyList())
+
+    val order = orders.find { it.id == orderID }
+    if (order == null) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     val radioOptions = listOf("S", "M", "L")
     //------------------- ข้อมูลสมมติ -------------------
-    var selectedOption by remember { mutableStateOf("M") }
-    var qty by remember { mutableStateOf(1) }
-    var note by remember { mutableStateOf("-") }
+    var selectedOption by remember { mutableStateOf(order.size) }
+    var qty by remember { mutableStateOf(order.qty) }
+    var note by remember { mutableStateOf(order.note ?: "") }
 
     Column(
         modifier = modifier
@@ -94,6 +110,13 @@ fun EditOrderScreen(orderID: String, onBack: () -> Unit, modifier: Modifier = Mo
             }
             Button(
                 onClick = {
+                    orderVM.updateOrder(
+                        order.copy(
+                            size = selectedOption,
+                            qty = qty,
+                            note = note.ifBlank { null }
+                        )
+                    )
                     onBack()
                 },
                 modifier = Modifier.weight(1f),
