@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7dc79b0b-9233-448b-8a86-2cc15319eb95" name="Changes" comment="Added firebase kotlin" />
+    <list default="true" id="7dc79b0b-9233-448b-8a86-2cc15319eb95" name="Changes" comment="Updated files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,12 +22,12 @@
     &quot;assignee&quot;: &quot;WarinCode&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/WarinCode/mobile-application-design-and-development.git",
-    "accountId": "7eee0781-6ce1-49be-81ff-a9977ec8c42e"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/WarinCode/mobile-application-design-and-development.git&quot;,
+    &quot;accountId&quot;: &quot;7eee0781-6ce1-49be-81ff-a9977ec8c42e&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -80,7 +80,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771921619365</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Updated files">
+      <option name="closed" value="true" />
+      <created>1771983647978</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1771983647978</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -111,6 +119,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added firebase kotlin" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added firebase kotlin" />
+    <MESSAGE value="Updated files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated files" />
   </component>
 </project>
