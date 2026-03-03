@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.firebasekotlin.auth.AuthViewModel
 
 @Composable
 fun RegisterScreen(
@@ -43,6 +44,18 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var localError by remember { mutableStateOf<String?>(null) }
 
+    val authVM = viewModel<AuthViewModel>()
+    val authState by authVM.authState.collectAsState()
+
+    LaunchedEffect(authState) {
+        when(authState) {
+            is AuthViewModel.AuthState.Success -> {
+                authVM.resetState()
+                onRegisterSuccess()
+            }
+            else -> {}
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,7 +99,8 @@ fun RegisterScreen(
                     return@Button
                 }
                 localError = null
-            },
+                authVM.register(email, password)
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

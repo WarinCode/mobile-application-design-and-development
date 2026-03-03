@@ -96,4 +96,41 @@ class AuthViewModel : ViewModel() {
     fun resetState() {
         _authState.value = AuthState.Idle
     }
+
+    fun loginWithGoogle(context: Context) {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            try {
+                val credentialManager = CredentialManager.create(context)
+
+                val signInWithGoogleOption = GetSignInWithGoogleOption
+                    .Builder("558818551307-6dd1j6f8hi567bhom5om4r5ot3dpu6vd.apps.googleusercontent.com") //https://console.cloud.google.com/auth/clients
+                .build()
+
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(signInWithGoogleOption)
+                    .build()
+
+                val result = credentialManager.getCredential(
+                    request = request,
+                    context = context
+                )
+
+                val credential = result.credential
+                if (credential is CustomCredential &&
+                    credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                ) {
+                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                    val firebaseCredential = GoogleAuthProvider.getCredential(
+                        googleIdTokenCredential.idToken, null
+                    )
+                    auth.signInWithCredential(firebaseCredential).await()
+                    _authState.value = AuthState.Success
+                }
+
+            } catch (e: GetCredentialException) {
+                _authState.value = AuthState.Error("Error: ${e.message}")
+            }
+        }
+    }
 }
