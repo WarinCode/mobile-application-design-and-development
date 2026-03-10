@@ -7,21 +7,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,7 +29,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.firebasekotlin.auth.AuthViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.firebasekotlin.firebase.AuthViewModel
 
 @Composable
 fun RegisterScreen(
@@ -45,17 +43,18 @@ fun RegisterScreen(
     var localError by remember { mutableStateOf<String?>(null) }
 
     val authVM = viewModel<AuthViewModel>()
+
     val authState by authVM.authState.collectAsState()
 
     LaunchedEffect(authState) {
-        when(authState) {
-            is AuthViewModel.AuthState.Success -> {
+        when(authState){
+            is AuthViewModel.AuthState.Success ->{
                 authVM.resetState()
                 onRegisterSuccess()
-            }
-            else -> {}
+            }else -> {}
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,8 +98,8 @@ fun RegisterScreen(
                     return@Button
                 }
                 localError = null
-                authVM.register(email, password)
-                      },
+                authVM.register(email,password)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

@@ -1,9 +1,6 @@
 package com.example.firebasekotlin.screen
 
-import android.content.Context
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,16 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
@@ -42,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -50,9 +44,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.firebasekotlin.R
-import com.example.firebasekotlin.auth.AuthViewModel
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
+import com.example.firebasekotlin.firebase.AuthViewModel
 
 @Composable
 fun LoginScreen(
@@ -68,16 +60,15 @@ fun LoginScreen(
 
     val authVM = viewModel<AuthViewModel>()
     val authState by authVM.authState.collectAsState()
+
     LaunchedEffect(authState) {
-        when(authState) {
-            is AuthViewModel.AuthState.Success -> {
+        when(authState){
+            is AuthViewModel.AuthState.Success ->{
                 authVM.resetState()
                 onLoginSuccess()
-            }
-            else -> {}
+            }else -> {}
         }
     }
-
     if (showForgotDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -103,8 +94,8 @@ fun LoginScreen(
                 TextButton(
                     onClick = {
                         authVM.resetPassword(resetEmail)
-                        showForgotDialog = false
-                        resetEmail = ""
+                        showForgotDialog=false
+                        resetEmail=""
                     },
                     enabled = resetEmail.isNotBlank(),
                 ) { Text("ส่ง Email", color = Color(0xFF6D9E51)) }
@@ -175,7 +166,7 @@ fun LoginScreen(
         //------------------- ปุ่มเข้าสู่ระบบ -------------------
         Button(
             onClick = {
-                authVM.loginWithEmail(email, password)
+                authVM.loginWithEmail(email,password)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -209,44 +200,43 @@ fun LoginScreen(
         }
         Spacer(Modifier.height(12.dp))
         //------------------- Icon สำหรับล็อกอินผ่านโซเชียล -------------------
-        Row {
-            IconButton(
-                onClick = {
-                    authVM.loginWithGoogle(context)
-//                    onLoginSuccess()
-                },
-                modifier = Modifier
-                    .size(56.dp)
-                    .border(1.dp, Color.LightGray, CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.search),
-                    contentDescription = "Sign in with Google",
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            Spacer(Modifier.width(12.dp))
-
-            IconButton(
-                onClick = { },
-                modifier = Modifier
-                    .size(56.dp)
-                    .border(1.dp, Color.LightGray, CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.facebook),
-                    contentDescription = "Sign in with Google",
-                    modifier = Modifier.size(38.dp)
-                )
-            }
-        }
-//        OutlinedButton(
-//            onClick = { },
-//            modifier = Modifier.fillMaxWidth().height(50.dp),
-//            shape = RoundedCornerShape(8.dp),
-//            border = BorderStroke(1.dp, Color.LightGray)
-//        ) {
-//            Text("Sign in with Google", color = Color.Black)
+//        Row {
+//            IconButton(
+//                onClick = {  },
+//                modifier = Modifier
+//                    .size(56.dp)
+//                    .border(1.dp, Color.LightGray, CircleShape)
+//            ) {
+//                Image(
+//                    painter = painterResource(R.drawable),
+//                    contentDescription = "Sign in with Google",
+//                    modifier = Modifier.size(28.dp)
+//                )
+//            }
+//            Spacer(Modifier.width(12.dp))
+//
+//            IconButton(
+//                onClick = { },
+//                modifier = Modifier
+//                    .size(56.dp)
+//                    .border(1.dp, Color.LightGray, CircleShape)
+//            ) {
+//                Image(
+//                    painter = painterResource(R.drawable.facebook),
+//                    contentDescription = "Sign in with Google",
+//                    modifier = Modifier.size(38.dp)
+//                )
+//            }
 //        }
+        OutlinedButton(
+            onClick = {
+                authVM.loginWithGoogle(context)
+            },
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, Color.LightGray)
+        ) {
+            Text("Sign in with Google", color = Color.Black)
+        }
     }
 }
